@@ -1,6 +1,5 @@
 # FIM-Merging: Data-Free Layer-Adaptive Merging via Fisher Information for Long-to-Short Reasoning LLMs
 
-[![arXiv](https://img.shields.io/badge/arXiv-2503.xxxxx-b31b1b.svg)](https://arxiv.org/abs/2603.21705)
 
 ## Overview
 
@@ -104,18 +103,7 @@ python eval_self_consistency.py \
 - Base model: [Qwen2.5-Math-7B](https://huggingface.co/Qwen/Qwen2.5-Math-7B)
 - FT model: [DeepSeek-R1-Distill-Qwen-7B](https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-7B)
 
-## Citation
 
-```bibtex
-@article{xia2025fim,
-  title={Data-Free Layer-Adaptive Merging via Fisher Information for Long-to-Short Reasoning LLMs},
-  author={Xia, Tian},
-  journal={arXiv preprint},
-  year={2025}
-}
 ```
 
-## Acknowledgements
 
-We thank Dr. Yilun Wu (National Yang Ming Chiao Tung University) for his guidance
-and Dr. Jiahuan Pei (Vrije Universiteit Amsterdam) for her support.
