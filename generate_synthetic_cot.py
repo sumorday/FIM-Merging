@@ -1,20 +1,24 @@
 """
 Self-Generated Dummy Thinking Shells for FIM Computation
 =========================================================
-完全data-free版本：让base model自己生成带<think>...</think>结构的序列，
-用这些序列替代random tokens计算FIM。
+Fully data-free approach: Leverages the base model to generate sequences 
+with <think>...</think> structures, replacing traditional random tokens 
+for Fisher Information Matrix (FIM) estimation.
 
-核心思路（受RAIN-Merging启发）：
-- RAIN用null-space projection保护thinking format
-- 我们用thinking format序列计算FIM，让FIM感知reasoning pathway的激活模式
-- 完全不需要任何真实问题数据
+Core Methodology (Inspired by RAIN-Merging):
+- While RAIN utilizes null-space projection to preserve thinking formats, 
+  we compute the FIM using these format-specific sequences.
+- This allows the FIM to characterize the activation patterns of specific 
+  reasoning pathways.
+- Operates in a completely data-free regime (no real-world datasets required).
 
-相比random tokens的优势：
-- 激活了<think>...</think>的reasoning subspace
-- FIM能更准确反映long-CoT路径的参数重要性
-- 对AIME24等多步推理任务更有针对性
+Advantages over Random Tokens:
+- Specifically activates the <think>...</think> reasoning subspace.
+- Enables the FIM to more accurately reflect parameter importance along 
+  long-CoT (Chain-of-Thought) trajectories.
+- Highly targeted for multi-step reasoning tasks such as AIME24.
 
-运行方式：
+Usage:
     python generate_synthetic_cot.py \
         --base_model /path/to/base_model \
         --ft_model /path/to/ft_model \
@@ -23,9 +27,9 @@ Self-Generated Dummy Thinking Shells for FIM Computation
         --max_new_tokens 256 \
         --device cuda
 
-注意：用base model和ft model各生成一半，混合使用
+Note: Generate half of the samples using the base model and the other half 
+using the fine-tuned (ft) model, then mix for optimal results.
 """
-
 import json
 import torch
 import argparse
