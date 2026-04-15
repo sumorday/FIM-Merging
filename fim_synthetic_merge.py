@@ -1,11 +1,14 @@
 """
-Step 2: FIM-TIES+ Merge using Synthetic CoT data
+Step 2: FIM-TIES+ Merge using Synthetic CoT Data
 =================================================
-和FIM-TIES完全相同，唯一区别：
-用synthetic CoT序列（而非random tokens）计算diagonal FIM
+Core mechanism: Identical to FIM-TIES, with one key distinction:
+Calculates the diagonal Fisher Information Matrix (FIM) using synthetic 
+Chain-of-Thought (CoT) sequences instead of random tokens.
 
-这样FIM能更准确地反映多步推理路径的重要性，
-预期改善AIME24等高难度benchmark的表现。
+Rationale:
+By utilizing CoT data, the FIM more accurately captures the importance of 
+multi-step reasoning paths, which is expected to enhance performance on 
+complex reasoning benchmarks such as AIME24.
 
 Usage:
     python fim_synthetic_merge.py \
