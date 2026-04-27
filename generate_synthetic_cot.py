@@ -35,8 +35,8 @@ import torch
 import argparse
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-# 16种不同的thinking shell起始prompt
-# 让模型自由生成thinking内容，不给任何数学问题
+#16 different thinking shell initial prompts
+#Allow the model to freely generate thinking content without providing any math problems
 THINKING_SEEDS = [
     "<|im_start|>assistant\n<think>\n",
     "<|im_start|>assistant\n<think>\nLet me think step by step.\n",
@@ -60,8 +60,7 @@ THINKING_SEEDS = [
 def generate_thinking_shell(model, tokenizer, seed_prompt,
                              max_new_tokens=256, device='cuda'):
     """
-    让模型从thinking seed开始自由生成，
-    产生带reasoning结构的dummy序列
+Let the model freely generate starting from a thinking seed, producing a dummy sequence with a reasoning structure.
     """
     inputs = tokenizer(seed_prompt, return_tensors='pt',
                        add_special_tokens=False).to(device)
@@ -97,7 +96,7 @@ def main():
     results = []
     n_per_model = args.n_samples // 2
 
-    # ── 用FT model生成前一半（DeepSeek-R1有更丰富的thinking结构）──
+    # ── "Use the FT model to generate the first half (DeepSeek-R1 has a richer thinking structure)."──
     print(f"\n[1/2] Loading FT model: {args.ft_model}")
     ft_tokenizer = AutoTokenizer.from_pretrained(
         args.ft_model, trust_remote_code=True)
@@ -125,7 +124,7 @@ def main():
     torch.cuda.empty_cache()
     print("  FT model unloaded.")
 
-    # ── 用Base model生成后一半 ──
+    # ── Use the Base model to generate the second half. ──
     print(f"\n[2/2] Loading Base model: {args.base_model}")
     base_tokenizer = AutoTokenizer.from_pretrained(
         args.base_model, trust_remote_code=True)
@@ -153,7 +152,7 @@ def main():
     torch.cuda.empty_cache()
     print("  Base model unloaded.")
 
-    # ── 保存 ──
+    # ── save ──
     with open(args.output_file, 'w', encoding='utf-8') as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
