@@ -54,14 +54,14 @@ def _is_gate_proj(name):
 def compute_fim_from_synthetic(base_model, tokenizer, synthetic_data_path,
                                 n_samples=8, max_seq_len=256, device='cpu'):
     """
-    使用synthetic CoT数据计算diagonal FIM
-    替换原来的random token inputs
+Computing diagonal FIM using synthetic CoT data  
+Replacing the original random token inputs
     """
     logger.info(f"Loading synthetic CoT data from {synthetic_data_path}...")
     with open(synthetic_data_path) as f:
         data = json.load(f)
 
-    # 取前n_samples条
+    # Select the first n_samples items
     samples = data[:n_samples]
     logger.info(f"Using {len(samples)} synthetic CoT examples for FIM computation")
 
@@ -72,7 +72,7 @@ def compute_fim_from_synthetic(base_model, tokenizer, synthetic_data_path,
                    for name, param in model.named_parameters()}
 
     for i, sample in enumerate(samples):
-        # 用full_text（problem + solution）tokenize
+        # use full_text（problem + solution）tokenize
         text = sample['full_text']
         inputs = tokenizer(
             text,
@@ -99,7 +99,7 @@ def compute_fim_from_synthetic(base_model, tokenizer, synthetic_data_path,
     model.cpu()
     torch.cuda.empty_cache()
 
-    # 聚合到layer级别
+    # Aggregate to the layer level
     layer_fim = {}
     for name, fim in fisher_diag.items():
         number = _get_layer_number(name)
@@ -137,7 +137,7 @@ def compute_delta_norms(base_model, ft_model):
 
 
 def compute_alpha(layer_fim, layer_delta):
-    """与原FIM-Merging完全相同的alpha计算"""
+    """The identical alpha calculation as the original FIM-Merging"""
     eps = 1e-10
     keys = set(layer_fim) & set(layer_delta)
     importance = {k: layer_fim[k] * layer_delta[k] for k in keys}
@@ -201,8 +201,7 @@ def fim_synthetic_merge(base_model_path, ft_model_path, save_path,
                         gate_protection_factor=0.7,
                         norm_drift_threshold=0.05):
     """
-    FIM-TIES+ : 与FIM-TIES完全相同，
-    唯一区别是用synthetic CoT数据替代random tokens计算FIM
+FIM-TIES+ : Exactly the same as FIM-TIES, the only difference is that we use synthetic CoT data instead of random tokens to compute the FIM.
     """
     logger.info("=" * 60)
     logger.info("FIM-TIES+ MERGE (Synthetic CoT FIM)")
@@ -218,7 +217,7 @@ def fim_synthetic_merge(base_model_path, ft_model_path, save_path,
     ft_model = AutoModelForCausalLM.from_pretrained(
         ft_model_path, torch_dtype=torch.bfloat16, device_map='cpu')
 
-    # 关键区别：用synthetic CoT计算FIM
+    # Key difference: FIM is computed using synthetic CoT
     fim_scores  = compute_fim_from_synthetic(
         base_model, tokenizer, synthetic_data_path,
         n_samples=n_samples, max_seq_len=max_seq_len, device=device)
